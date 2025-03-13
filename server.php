@@ -88,6 +88,7 @@ function ScanQr() {
 }
 
 function ContinueQr() {
+    session_start();
     session_destroy();
     header("Location: ./");
 }
