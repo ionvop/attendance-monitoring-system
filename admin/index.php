@@ -127,8 +127,8 @@ include "common.php";
                         <div class="form__top__title">
                             Faculty Attendance
                         </div>
-                        <div class="form__top__download">
-                            <button class="-button">
+                        <form class="form__top__download" action="server.php" method="post" enctype="multipart/form-data">
+                            <button class="-button" name="method" value="download">
                                 <div class="-iconlabel">
                                     <div class="-iconlabel__icon">
                                         <?=Icon("file_save")?>
@@ -138,7 +138,7 @@ include "common.php";
                                     </div>
                                 </div>
                             </button>
-                        </div>
+                        </form>
                     </div>
                     <div class="form__headers">
                         <div class="form__headers__name form__header">
@@ -150,11 +150,11 @@ include "common.php";
                         <div class="form__headers__time form__header">
                             Time Scanned
                         </div>
-                        <div class="form__headers__clear form__header">
-                            <button class="-button">
+                        <form class="form__headers__clear form__header" action="server.php" method="post" enctype="multipart/form-data">
+                            <button class="-button" name="method" value="clear">
                                 <?=Icon("delete")?>
                             </button>
-                        </div>
+                        </form>
                     </div>
                     <div class="form__data">
                         <div class="form__data__box">
@@ -186,11 +186,12 @@ include "common.php";
                                             <div class="item__time item__column">
                                                 {$time}
                                             </div>
-                                            <div class="item__delete item__column">
-                                                <button class="-button">
+                                            <form class="item__delete item__column" action="server.php" method="post" enctype="multipart/form-data">
+                                                <button class="-button" name="method" value="deleteRecord">
                                                     {$icon}
                                                 </button>
-                                            </div>
+                                                <input type="hidden" name="id" value="{$row['id']}">
+                                            </form>
                                         </div>
                                     HTML;
                                 }
