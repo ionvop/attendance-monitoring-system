@@ -13,6 +13,18 @@ if (isset($_POST["method"])) {
         case "continue":
             ContinueQr();
             break;
+        case "clear":
+            Clear();
+            break;
+        case "deleteRecord":
+            DeleteRecord();
+            break;
+        case "forgotQr":
+            ForgotQr();
+            break;
+        case "download":
+            Download();
+            break;
         default:
             DefaultMethod();
             break;
@@ -89,6 +101,7 @@ function ScanQr() {
 
         if ($timeDiff < 3600) {
             header("Location: cooldown/");
+            exit;
         }
     }
 
@@ -107,6 +120,95 @@ function ContinueQr() {
     session_start();
     session_destroy();
     header("Location: ./");
+}
+
+function Clear() {
+    $db = new SQLite3("database.db");
+
+    $query = <<<SQL
+        DELETE FROM `attendance`
+    SQL;
+
+    $db->query($query);
+    header("Location: admin/");
+}
+
+function DeleteRecord() {
+    $db = new SQLite3("database.db");
+
+    $query = <<<SQL
+        DELETE FROM `attendance` WHERE `id` = :id
+    SQL;
+
+    $stmt = $db->prepare($query);
+    $stmt->bindValue(":id", $_POST["id"]);
+    $stmt->execute();
+    header("Location: admin/");
+}
+
+function ForgotQr() {
+    $db = new SQLite3("database.db");
+
+    $query = <<<SQL
+        SELECT * FROM `users` WHERE `firstname` = :firstname AND `lastname` = :lastname AND `department` = :department LIMIT 1
+    SQL;
+
+    $stmt = $db->prepare($query);
+    $stmt->bindValue(":firstname", $_POST["firstname"]);
+    $stmt->bindValue(":lastname", $_POST["lastname"]);
+    $stmt->bindValue(":department", $_POST["department"]);
+    $user = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
+
+    if ($user == false) {
+        Alert("No matching records found.");
+    }
+
+    session_start();
+    session_unset();
+    $_SESSION["qrId"] = $user["qr_id"];
+    header("Location: qr/");
+}
+
+function Download() {
+    $db = new SQLite3("database.db");
+
+    $result = [
+        ["Name", "Department", "Time Scanned"]
+    ];
+
+    $query = <<<SQL
+        SELECT `attendance`.*, `users`.`firstname`, `users`.`lastname`, `users`.`department`
+        FROM `attendance` LEFT JOIN `users` ON `attendance`.`user_id` = `users`.`id`
+    SQL;
+
+    $rows = $db->query($query);
+
+    while ($row = $rows->fetchArray()) {
+        date_default_timezone_set("Asia/Manila");
+        $result[] = ["{$row['firstname']} {$row['lastname']}", $row["department"], date("F j, Y g:iA", $row["time"])];
+    }
+
+    $filename = date("Y-m-d H-i-s", time()) . ".csv";
+    header("Content-Type: text/csv");
+    header("Content-Disposition: attachment; filename=\"{$filename}\"");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+    $fp = fopen("php://output", "w");
+
+    foreach ($result as $row) {
+        fputcsv($fp, $row);
+    }
+
+    fclose($fp);
+    flush();
+
+    echo <<<HTML
+        <script>
+            location.href = "admin/";
+        </script>
+    HTML;
+
+    exit;
 }
 
 function DefaultMethod() {
