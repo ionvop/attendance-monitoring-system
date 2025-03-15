@@ -57,3 +57,17 @@ body {
 .-title {
     font-size: 2rem;
 }
+
+.-iconlabel {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+}
+
+.-iconlabel__icon > svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.-iconlabel__label {
+    padding-left: 1rem;
+}
