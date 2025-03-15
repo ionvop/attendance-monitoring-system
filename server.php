@@ -74,6 +74,25 @@ function ScanQr() {
     }
 
     $query = <<<SQL
+        SELECT * FROM `attendance` WHERE `user_id` = :user_id; ORDER BY `time` DESC LIMIT 1;
+    SQL;
+
+    $stmt = $db->prepare($query);
+    $stmt->bindValue(":user_id", $user["id"]);
+    $attendance = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
+    session_start();
+    session_unset();
+    $_SESSION["name"] = "{$user['firstname']} {$user['lastname']}";
+
+    if ($attendance != false) {
+        $timeDiff = time() - $attendance["time"];
+
+        if ($timeDiff < 3600) {
+            header("Location: cooldown/");
+        }
+    }
+
+    $query = <<<SQL
         INSERT INTO `attendance` (`user_id`)
         VALUES (:user_id);
     SQL;
@@ -81,9 +100,6 @@ function ScanQr() {
     $stmt = $db->prepare($query);
     $stmt->bindValue(":user_id", $user["id"]);
     $stmt->execute();
-    session_start();
-    session_unset();
-    $_SESSION["name"] = "{$user['firstname']} {$user['lastname']}";
     header("Location: success/");
 }
 
