@@ -38,11 +38,15 @@
             }
 
             .scan__qr > video {
-                width: 30rem;
+                width: 20rem;
                 border-radius: 1rem;
             }
 
             .scan__register {
+                padding: 1rem;
+            }
+
+            .scan__lost {
                 padding: 1rem;
             }
 
@@ -75,6 +79,9 @@
                     </div>
                     <div class="scan__register -center">
                         Haven't registered yet? <a href="register/">Register</a>
+                    </div>
+                    <div class="scan__lost -center">
+                        <a href="forgot/">Lost your QR?</a>
                     </div>
                     <div></div>
                 </div>
