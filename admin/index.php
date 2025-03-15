@@ -36,20 +36,51 @@ include "common.php";
                 border-radius: 1rem;
             }
 
-            .form__title {
-                padding: 1rem;
+            .form__top {
+                display: grid;
+                grid-template-columns: 1fr max-content;
                 color: #fff;
+            }
+
+            .form__top__title {
+                display: flex;
+                align-items: center;
+                padding: 1rem;
+            }
+
+            .form__top__download {
+                padding: 1rem;
+            }
+
+            .form__top__download > button {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                border-radius: 1rem;
             }
 
             .form__headers {
                 display: grid;
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(3, 1fr) max-content;
                 background-color: #fff;
                 font-weight: bold;
             }
 
             .form__header {
+                display: flex;
+                align-items: center;
                 padding: 1rem;
+            }
+
+            .form__headers__clear > button {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                border-radius: 1rem;
+                background-color: #a55;
+            }
+
+            .form__headers__clear > button > svg {
+                width: 1rem;
+                height: 1rem;
             }
 
             .form__data {
@@ -62,11 +93,26 @@ include "common.php";
 
             .form__data__box .item {
                 display: grid;
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(3, 1fr) max-content;
             }
 
             .form__data__box .item__column {
+                display: flex;
+                align-items: center;
                 padding: 1rem;
+                border-bottom: 1px solid #666;
+            }
+
+            .form__data__box .item__delete > button {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                border-radius: 1rem;
+                background-color: #a55;
+            }
+
+            .form__data__box .item__delete > button > svg {
+                width: 1rem;
+                height: 1rem;
             }
         </style>
     </head>
@@ -77,8 +123,22 @@ include "common.php";
             </div>
             <div class="content">
                 <div class="form">
-                    <div class="form__title -title">
-                        Faculty Attendance
+                    <div class="form__top -title">
+                        <div class="form__top__title">
+                            Faculty Attendance
+                        </div>
+                        <div class="form__top__download">
+                            <button class="-button">
+                                <div class="-iconlabel">
+                                    <div class="-iconlabel__icon">
+                                        <?=Icon("file_save")?>
+                                    </div>
+                                    <div class="-iconlabel__label">
+                                        Save as CSV
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
                     </div>
                     <div class="form__headers">
                         <div class="form__headers__name form__header">
@@ -89,6 +149,11 @@ include "common.php";
                         </div>
                         <div class="form__headers__time form__header">
                             Time Scanned
+                        </div>
+                        <div class="form__headers__clear form__header">
+                            <button class="-button">
+                                <?=Icon("delete")?>
+                            </button>
                         </div>
                     </div>
                     <div class="form__data">
@@ -108,6 +173,7 @@ include "common.php";
                                     $name = htmlentities($name);
                                     date_default_timezone_set("Asia/Manila");
                                     $time = date("F j, Y g:iA", $row["time"]);
+                                    $icon = Icon("remove");
 
                                     echo <<<HTML
                                         <div class="item">
@@ -119,6 +185,11 @@ include "common.php";
                                             </div>
                                             <div class="item__time item__column">
                                                 {$time}
+                                            </div>
+                                            <div class="item__delete item__column">
+                                                <button class="-button">
+                                                    {$icon}
+                                                </button>
                                             </div>
                                         </div>
                                     HTML;
