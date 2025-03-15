@@ -94,13 +94,13 @@ include "common.php";
             .form__data__box .item {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr) max-content;
+                border-bottom: 1px solid #666;
             }
 
             .form__data__box .item__column {
                 display: flex;
                 align-items: center;
                 padding: 1rem;
-                border-bottom: 1px solid #666;
             }
 
             .form__data__box .item__delete > button {
@@ -151,7 +151,7 @@ include "common.php";
                             Time Scanned
                         </div>
                         <form class="form__headers__clear form__header" action="server.php" method="post" enctype="multipart/form-data">
-                            <button class="-button" name="method" value="clear">
+                            <button class="-button" name="method" value="clear" onclick="return confirm('Are You sure you want to clear ALL records from the table?')">
                                 <?=Icon("delete")?>
                             </button>
                         </form>
@@ -187,7 +187,7 @@ include "common.php";
                                                 {$time}
                                             </div>
                                             <form class="item__delete item__column" action="server.php" method="post" enctype="multipart/form-data">
-                                                <button class="-button" name="method" value="deleteRecord">
+                                                <button class="-button" name="method" value="deleteRecord" onclick="return confirm('Are you sure you want to delete this record?')">
                                                     {$icon}
                                                 </button>
                                                 <input type="hidden" name="id" value="{$row['id']}">
