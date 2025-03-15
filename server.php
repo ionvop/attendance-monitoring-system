@@ -82,7 +82,8 @@ function ScanQr() {
     $user = $stmt->execute()->fetchArray(SQLITE3_ASSOC);
 
     if ($user == false) {
-        Alert("Invalid QR Code.");
+        header("Location: ./");
+        exit;
     }
 
     $query = <<<SQL
@@ -196,18 +197,11 @@ function Download() {
     $fp = fopen("php://output", "w");
 
     foreach ($result as $row) {
-        fputcsv($fp, $row);
+        fputcsv($fp, $row, ",", "\"", "\\");
     }
 
     fclose($fp);
     flush();
-
-    echo <<<HTML
-        <script>
-            location.href = "admin/";
-        </script>
-    HTML;
-
     exit;
 }
 
